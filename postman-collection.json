@@ -1,0 +1,305 @@
+{
+  "info": {
+    "name": "EO-Middleware User API",
+    "description": "Complete CRUD API for User management with search functionality",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "eo-middleware-user-api",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check API health status"
+      }
+    },
+    {
+      "name": "Create User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"123-456-7890\",\n  \"glpiId\": \"GLPI001\",\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["users"]
+        },
+        "description": "Create a new user"
+      }
+    },
+    {
+      "name": "Get All Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["users"]
+        },
+        "description": "Get all users"
+      }
+    },
+    {
+      "name": "Get User by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "1"]
+        },
+        "description": "Get user by ID"
+      }
+    },
+    {
+      "name": "Get User by Email",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/email/john.doe@example.com",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "email", "john.doe@example.com"]
+        },
+        "description": "Get user by email address"
+      }
+    },
+    {
+      "name": "Get User by GLPI ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/glpi/GLPI001",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "glpi", "GLPI001"]
+        },
+        "description": "Get user by GLPI ID"
+      }
+    },
+    {
+      "name": "Search Users - Basic",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/search",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "search"]
+        },
+        "description": "Basic search - returns all users with default pagination"
+      }
+    },
+    {
+      "name": "Search Users - By Name (Partial)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/search?name=john&searchType=partial",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "search"],
+          "query": [
+            {
+              "key": "name",
+              "value": "john"
+            },
+            {
+              "key": "searchType",
+              "value": "partial"
+            }
+          ]
+        },
+        "description": "Search users by name with partial matching"
+      }
+    },
+    {
+      "name": "Search Users - By Email (Exact)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/search?email=john.doe@example.com&searchType=exact",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "search"],
+          "query": [
+            {
+              "key": "email",
+              "value": "john.doe@example.com"
+            },
+            {
+              "key": "searchType",
+              "value": "exact"
+            }
+          ]
+        },
+        "description": "Search users by email with exact matching"
+      }
+    },
+    {
+      "name": "Search Users - Advanced",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/search?name=john&isActive=true&limit=5&offset=0&sortBy=name&sortOrder=ASC",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "search"],
+          "query": [
+            {
+              "key": "name",
+              "value": "john"
+            },
+            {
+              "key": "isActive",
+              "value": "true"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            },
+            {
+              "key": "offset",
+              "value": "0"
+            },
+            {
+              "key": "sortBy",
+              "value": "name"
+            },
+            {
+              "key": "sortOrder",
+              "value": "ASC"
+            }
+          ]
+        },
+        "description": "Advanced search with multiple criteria, pagination, and sorting"
+      }
+    },
+    {
+      "name": "Search Users - By GLPI ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/search?glpiId=GLPI001&searchType=exact",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "search"],
+          "query": [
+            {
+              "key": "glpiId",
+              "value": "GLPI001"
+            },
+            {
+              "key": "searchType",
+              "value": "exact"
+            }
+          ]
+        },
+        "description": "Search users by GLPI ID"
+      }
+    },
+    {
+      "name": "Search Users - Active Only",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/search?isActive=true&sortBy=createdAt&sortOrder=DESC",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "search"],
+          "query": [
+            {
+              "key": "isActive",
+              "value": "true"
+            },
+            {
+              "key": "sortBy",
+              "value": "createdAt"
+            },
+            {
+              "key": "sortOrder",
+              "value": "DESC"
+            }
+          ]
+        },
+        "description": "Search only active users, sorted by creation date"
+      }
+    },
+    {
+      "name": "Update User",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Smith\",\n  \"email\": \"john.smith@example.com\",\n  \"phone\": \"987-654-3210\",\n  \"glpiId\": \"GLPI002\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "1"]
+        },
+        "description": "Update user by ID"
+      }
+    },
+    {
+      "name": "Soft Delete User (Deactivate)",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/1/deactivate",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "1", "deactivate"]
+        },
+        "description": "Soft delete (deactivate) user by ID"
+      }
+    },
+    {
+      "name": "Hard Delete User",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "1"]
+        },
+        "description": "Permanently delete user by ID"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    }
+  ]
+}

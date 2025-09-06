@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: eo-orbit-db
+    environment:
+      POSTGRES_DB: eo-orbit
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d eo-orbit"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: node:20-alpine
+    container_name: eo-middleware
+    working_dir: /app
+    env_file:
+      - .env
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=eo-orbit
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run start:dev"
+    restart: unless-stopped
+  # GLPI DB
+  glpi-db:
+    image: mariadb:10.6
+    container_name: glpi-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: glpidb
+      MYSQL_USER: glpi
+      MYSQL_PASSWORD: glpipassword
+    volumes:
+      - glpi-db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  # GLPI service
+  glpi:
+    image: diouxx/glpi
+    container_name: glpi
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - TIMEZONE=Europe/Paris
+    volumes:
+      - glpi_data:/var/www/html/glpi
+    depends_on:
+      glpi-db:
+        condition: service_healthy
+  # phpMyAdmin for GLPI DB
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: glpi-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: glpi-db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    depends_on:
+      - glpi-db
+
+volumes:
+  postgres_data:
+  glpi-db_data:
+  glpi_data:

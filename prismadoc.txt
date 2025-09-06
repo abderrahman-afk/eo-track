@@ -1,0 +1,160 @@
+  With Prisma, entities are defined differently than TypeORM:
+
+  Before (TypeORM):
+  - Entities were in src/entities/*.entity.ts and src/user/entities/*.entity.ts (we deleted these)
+
+  Now (Prisma):
+  - Schema Definition: prisma/schema.prisma (this is your single source of truth)
+  - Generated Types: node_modules/@prisma/client/index.d.ts (auto-generated, don't edit)
+
+  📝 How Prisma Actually Works
+
+  ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+  │ prisma/         │────│ npx prisma       │────│ TypeScript      │
+  │ schema.prisma   │    │ generate         │    │ Types Generated │
+  └─────────────────┘    └──────────────────┘    └─────────────────┘
+          │                        │                       │
+          │                        ▼                       ▼
+          │              ┌──────────────────┐    ┌─────────────────┐
+          │              │ Migration Files  │    │ @prisma/client  │
+          │              │ prisma/migrations│    │ (Runtime)       │
+          │              └──────────────────┘    └─────────────────┘
+          │                        │                       │
+          ▼                        ▼                       ▼
+  ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+  │ Database Schema │◄───│ npx prisma       │◄───│ Your Code Uses  │
+  │ (PostgreSQL)    │    │ migrate dev      │    │ PrismaClient    │
+  └─────────────────┘    └──────────────────┘    └─────────────────┘
+
+  🔧 How to Add/Modify Entities
+
+  Current Schema (prisma/schema.prisma):
+
+  model User {
+    id        Int      @id @default(autoincrement())
+    name      String   @db.VarChar(255)
+    email     String   @unique @db.VarChar(255)
+    phone     String?  @db.VarChar(255)
+    glpiId    String?  @unique @map("glpi_id") @db.VarChar(255)
+    isActive  Boolean  @default(true)
+    createdAt DateTime @default(now()) @map("created_at")
+    createdBy String?  @map("created_by") @db.VarChar(255)
+    updatedAt DateTime @updatedAt @map("updated_at")
+    updatedBy String?  @map("updated_by") @db.VarChar(255)
+
+    @@map("users")
+  }
+
+  model Ticket {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now()) @map("created_at")
+    createdBy String?  @map("created_by") @db.VarChar(255)
+    updatedAt DateTime @updatedAt @map("updated_at")
+    updatedBy String?  @map("updated_by") @db.VarChar(255)
+
+    @@map("tickets")
+  }
+
+  To Add a New Entity (e.g., Product):
+
+  1. Edit prisma/schema.prisma:
+  model Product {
+    id          Int      @id @default(autoincrement())
+    name        String   @db.VarChar(255)
+    description String?  @db.Text
+    price       Decimal  @db.Decimal(10, 2)
+    inStock     Boolean  @default(true)
+    createdAt   DateTime @default(now()) @map("created_at")
+    updatedAt   DateTime @updatedAt @map("updated_at")
+
+    @@map("products")
+  }
+
+  2. Generate migration:
+  npm run db:migrate -- --name add-product-model
+
+  3. Generate client:
+  npm run db:generate
+
+  To Modify Existing Entity:
+
+  1. Edit the model in prisma/schema.prisma
+  2. Create migration: npm run db:migrate -- --name describe-your-changes
+  3. Regenerate client: npm run db:generate
+
+  🚀 Essential Prisma Commands
+
+  Database Operations:
+
+  # Create and apply migration
+  npm run db:migrate                    # or: npx prisma migrate dev
+  npm run db:migrate -- --name "description"
+
+  # Push schema changes without migration (for prototyping)
+  npm run db:push                       # or: npx prisma db push
+
+  # Reset database (⚠️ DESTROYS DATA)
+  npx prisma migrate reset --force
+
+  # Generate Prisma Client after schema changes
+  npm run db:generate                   # or: npx prisma generate
+
+  Development Tools:
+
+  # Open Prisma Studio (database GUI)
+  npm run db:studio                     # or: npx prisma studio
+
+  # View database structure
+  npx prisma db pull                    # Sync schema from existing DB
+
+  # Validate schema
+  npx prisma validate
+
+  # Format schema file
+  npx prisma format
+
+  Production Commands:
+
+  # Deploy migrations in production
+  npx prisma migrate deploy
+
+  # Generate client for production
+  npx prisma generate --no-engine
+
+  📊 How Types Work
+
+  After running npm run db:generate, you get:
+
+  import { User, Ticket, Prisma } from '@prisma/client';
+
+  // Your entities as TypeScript types
+  const user: User = {
+    id: 1,
+    name: "John",
+    email: "john@example.com",
+    // ... all other fields with correct types
+  };
+
+  // Prisma also generates utility types:
+  type CreateUser = Prisma.UserCreateInput;
+  type UpdateUser = Prisma.UserUpdateInput;
+  type UserWithRelations = Prisma.UserGetPayload<{
+    include: { orders: true }
+  }>;
+
+  🔗 Adding Relationships
+
+  model User {
+    id     Int     @id @default(autoincrement())
+    name   String
+    orders Order[] // One-to-many relation
+  }
+
+  model Order {
+    id     Int  @id @default(autoincrement())
+    userId Int  @map("user_id")
+    user   User @relation(fields: [userId], references: [id])
+  }
+
+  The key difference: Prisma uses a single schema file as the source of truth, then generates everything else from it, rather than having entity classes scattered
+  throughout your codebase like TypeORM.
