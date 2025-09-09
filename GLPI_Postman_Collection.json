@@ -1,0 +1,795 @@
+{
+  "info": {
+    "name": "EO-Middleware GLPI Complete API Collection",
+    "description": "Complete API collection for GLPI middleware with user management, tickets, groups, profiles, assets, and search functionality",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🧑‍💼 User Management",
+      "description": "All user-related endpoints including basic operations and relationships",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/users",
+            "description": "Get all users from GLPI"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/users/{{userId}}",
+            "description": "Get specific user by ID"
+          }
+        },
+        {
+          "name": "Get User Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/glpi/users/{{userId}}/tickets?limit=10&offset=0",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get user's tickets with pagination"
+          }
+        },
+        {
+          "name": "Get User Requested Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/glpi/users/{{userId}}/tickets/requested?limit=10&offset=0",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get tickets requested by user"
+          }
+        },
+        {
+          "name": "Get User Assigned Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/glpi/users/{{userId}}/tickets/assigned?limit=10&offset=0",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get tickets assigned to user"
+          }
+        },
+        {
+          "name": "Get User Groups",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/users/{{userId}}/groups",
+            "description": "Get user's groups"
+          }
+        },
+        {
+          "name": "Get User Profiles",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/users/{{userId}}/profiles",
+            "description": "Get user's profiles"
+          }
+        },
+        {
+          "name": "Get User Computers",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/users/{{userId}}/computers",
+            "description": "Get user's computers"
+          }
+        },
+        {
+          "name": "Get User Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/users/{{userId}}/stats",
+            "description": "Get user ticket statistics"
+          }
+        },
+        {
+          "name": "Get User Recent Activity",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/users/{{userId}}/recent",
+            "description": "Get user's recent activity"
+          }
+        },
+        {
+          "name": "Get User Overview",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/users/{{userId}}/overview",
+            "description": "Get complete user overview with all data"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🎫 Ticket Management",
+      "description": "Complete ticket CRUD operations and metadata",
+      "item": [
+        {
+          "name": "Get All Tickets",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/tickets",
+            "description": "Get all tickets"
+          }
+        },
+        {
+          "name": "Get Ticket by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/tickets/{{ticketId}}",
+            "description": "Get specific ticket by ID"
+          }
+        },
+        {
+          "name": "Create Ticket for User",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/glpi/users/{{userId}}/tickets",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Printer not working\",\n  \"content\": \"Office printer needs repair\",\n  \"urgency\": 3,\n  \"impact\": 3,\n  \"priority\": 3,\n  \"category\": 1,\n  \"type\": 1\n}"
+            },
+            "description": "Create new ticket for specific user"
+          }
+        },
+        {
+          "name": "Update Ticket",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/glpi/tickets/{{ticketId}}?userId={{userId}}",
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": 2,\n  \"content\": \"Updated: Issue being investigated\"\n}"
+            },
+            "description": "Update ticket with user validation"
+          }
+        },
+        {
+          "name": "Delete Ticket",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/glpi/tickets/{{ticketId}}?userId={{userId}}",
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                }
+              ]
+            },
+            "description": "Delete ticket with user validation"
+          }
+        },
+        {
+          "name": "Get Ticket Statuses",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/tickets/meta/statuses",
+            "description": "Get available ticket statuses"
+          }
+        },
+        {
+          "name": "Get Ticket Priorities",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/tickets/meta/priorities",
+            "description": "Get available ticket priorities"
+          }
+        },
+        {
+          "name": "Get Ticket Search Options",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/tickets/meta/search-options",
+            "description": "Get ticket search options"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Group Management",
+      "description": "Group operations and relationships",
+      "item": [
+        {
+          "name": "Get All Groups",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/groups",
+            "description": "Get all groups"
+          }
+        },
+        {
+          "name": "Get Group by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/groups/{{groupId}}",
+            "description": "Get specific group by ID"
+          }
+        },
+        {
+          "name": "Get Group Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/glpi/groups/{{groupId}}/tickets?limit=10&offset=0",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get group's tickets with pagination"
+          }
+        },
+        {
+          "name": "Get Group Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/groups/{{groupId}}/users",
+            "description": "Get group's users"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Profile Management",
+      "description": "Profile operations and permissions",
+      "item": [
+        {
+          "name": "Get All Profiles",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/profiles",
+            "description": "Get all profiles"
+          }
+        },
+        {
+          "name": "Get Profile by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/profiles/{{profileId}}",
+            "description": "Get specific profile by ID"
+          }
+        },
+        {
+          "name": "Get Profile Rights",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/profiles/{{profileId}}/rights",
+            "description": "Get profile rights/permissions"
+          }
+        },
+        {
+          "name": "Get Profile Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/profiles/{{profileId}}/users",
+            "description": "Get profile users"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏢 Entity Management",
+      "description": "Entity operations and relationships",
+      "item": [
+        {
+          "name": "Get All Entities",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/entities",
+            "description": "Get all entities"
+          }
+        },
+        {
+          "name": "Get Entity by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/entities/{{entityId}}",
+            "description": "Get specific entity by ID"
+          }
+        },
+        {
+          "name": "Get Entity Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/entities/{{entityId}}/users",
+            "description": "Get entity users"
+          }
+        }
+      ]
+    },
+    {
+      "name": "💻 Asset Management",
+      "description": "Computer, monitor, and software asset endpoints",
+      "item": [
+        {
+          "name": "Get All Computers",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/computers",
+            "description": "Get all computers"
+          }
+        },
+        {
+          "name": "Get Computer by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/computers/{{computerId}}",
+            "description": "Get specific computer by ID"
+          }
+        },
+        {
+          "name": "Get All Monitors",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/monitors",
+            "description": "Get all monitors"
+          }
+        },
+        {
+          "name": "Get Monitor by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/monitors/{{monitorId}}",
+            "description": "Get specific monitor by ID"
+          }
+        },
+        {
+          "name": "Get All Software",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/software",
+            "description": "Get all software"
+          }
+        },
+        {
+          "name": "Get Software by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/software/{{softwareId}}",
+            "description": "Get specific software by ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📂 Categories & Locations",
+      "description": "Hierarchical ticket categories and location endpoints",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/categories",
+            "description": "Get all ITIL categories (main + sub-categories)"
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/categories/{{categoryId}}",
+            "description": "Get specific category by ID"
+          }
+        },
+        {
+          "name": "Get Main Categories Only",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/categories/main",
+            "description": "Get only main categories (level 1, itilcategories_id = 0)"
+          }
+        },
+        {
+          "name": "Get All Sub-Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/categories/sub",
+            "description": "Get all sub-categories (level > 1, itilcategories_id != 0)"
+          }
+        },
+        {
+          "name": "Get Sub-Categories by Parent",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/categories/{{categoryId}}/sub-categories",
+            "description": "Get sub-categories for a specific parent category"
+          }
+        },
+        {
+          "name": "Get Category with Sub-Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/categories/{{categoryId}}/with-sub-categories",
+            "description": "Get category with its sub-categories and count"
+          }
+        },
+        {
+          "name": "Get Category Hierarchy",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/categories/hierarchy",
+            "description": "Get complete category hierarchy (organized parent-child structure)"
+          }
+        },
+        {
+          "name": "Get Ticket Categories (Legacy)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/ticket-categories",
+            "description": "Get all ticket categories (legacy endpoint)"
+          }
+        },
+        {
+          "name": "Get Ticket Category by ID (Legacy)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/ticket-categories/{{categoryId}}",
+            "description": "Get specific ticket category (legacy endpoint)"
+          }
+        },
+        {
+          "name": "Get All Locations",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/locations",
+            "description": "Get all locations"
+          }
+        },
+        {
+          "name": "Get Location by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/locations/{{locationId}}",
+            "description": "Get specific location by ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔍 Advanced Search",
+      "description": "GLPI search functionality with criteria filtering",
+      "item": [
+        {
+          "name": "Search Tickets",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/glpi/search/tickets",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"criteria\": [\n    {\n      \"field\": 4,\n      \"searchtype\": \"equals\",\n      \"value\": \"6\"\n    },\n    {\n      \"field\": 12,\n      \"searchtype\": \"equals\",\n      \"value\": \"1\"\n    }\n  ],\n  \"forceDisplay\": [2, 1, 12, 15],\n  \"limit\": 20,\n  \"offset\": 0\n}"
+            },
+            "description": "Search tickets with criteria (field 4=requester, field 12=status)"
+          }
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/glpi/search/users",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"criteria\": [\n    {\n      \"field\": 1,\n      \"searchtype\": \"contains\",\n      \"value\": \"admin\"\n    }\n  ],\n  \"forceDisplay\": [2, 1, 5, 8],\n  \"limit\": 10,\n  \"offset\": 0\n}"
+            },
+            "description": "Search users with criteria (field 1=name)"
+          }
+        },
+        {
+          "name": "Search Groups",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/glpi/search/groups",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"criteria\": [\n    {\n      \"field\": 1,\n      \"searchtype\": \"contains\",\n      \"value\": \"IT\"\n    }\n  ],\n  \"forceDisplay\": [2, 1, 16],\n  \"limit\": 10,\n  \"offset\": 0\n}"
+            },
+            "description": "Search groups with criteria (field 1=name)"
+          }
+        },
+        {
+          "name": "Search Profiles",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/glpi/search/profiles",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"criteria\": [\n    {\n      \"field\": 1,\n      \"searchtype\": \"contains\",\n      \"value\": \"Admin\"\n    }\n  ],\n  \"forceDisplay\": [2, 1, 19],\n  \"limit\": 10,\n  \"offset\": 0\n}"
+            },
+            "description": "Search profiles with criteria (field 1=name)"
+          }
+        },
+        {
+          "name": "Generic Search",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/glpi/search/{{itemType}}",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"criteria\": [\n    {\n      \"field\": 1,\n      \"searchtype\": \"contains\",\n      \"value\": \"search_term\"\n    }\n  ],\n  \"forceDisplay\": [2, 1],\n  \"limit\": 10,\n  \"offset\": 0\n}"
+            },
+            "description": "Generic search for any GLPI item type"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔧 System & Utility",
+      "description": "System information and utility endpoints",
+      "item": [
+        {
+          "name": "Get GLPI Configuration",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/config",
+            "description": "Get GLPI configuration"
+          }
+        },
+        {
+          "name": "Get Session Info",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/glpi/session",
+            "description": "Get current session information"
+          }
+        },
+        {
+          "name": "Sync Users (Dry Run)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/glpi/sync-users?dryRun=true",
+              "query": [
+                {
+                  "key": "dryRun",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Sync users from GLPI (dry run)"
+          }
+        },
+        {
+          "name": "Sync Users (Execute)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/glpi/sync-users?dryRun=false",
+              "query": [
+                {
+                  "key": "dryRun",
+                  "value": "false"
+                }
+              ]
+            },
+            "description": "Sync users from GLPI (execute)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏠 Application Endpoints",
+      "description": "Application-specific user management endpoints",
+      "item": [
+        {
+          "name": "Get All App Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user",
+            "description": "Get all application users"
+          }
+        },
+        {
+          "name": "Get App User by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/{{appUserId}}",
+            "description": "Get application user by ID"
+          }
+        },
+        {
+          "name": "Create App User",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"johndoe\",\n  \"email\": \"john.doe@example.com\",\n  \"glpiUserId\": 123,\n  \"role\": \"user\"\n}"
+            },
+            "description": "Create new application user"
+          }
+        },
+        {
+          "name": "Update App User",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/user/{{appUserId}}",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newemail@example.com\",\n  \"role\": \"admin\"\n}"
+            },
+            "description": "Update application user"
+          }
+        },
+        {
+          "name": "Delete App User",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/user/{{appUserId}}",
+            "description": "Delete application user"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "description": "Base URL for the API"
+    },
+    {
+      "key": "userId",
+      "value": "8",
+      "description": "GLPI User ID for testing"
+    },
+    {
+      "key": "appUserId", 
+      "value": "1",
+      "description": "Application User ID for testing"
+    },
+    {
+      "key": "ticketId",
+      "value": "123",
+      "description": "Ticket ID for testing"
+    },
+    {
+      "key": "groupId",
+      "value": "5",
+      "description": "Group ID for testing"
+    },
+    {
+      "key": "profileId",
+      "value": "2", 
+      "description": "Profile ID for testing"
+    },
+    {
+      "key": "entityId",
+      "value": "1",
+      "description": "Entity ID for testing"
+    },
+    {
+      "key": "computerId",
+      "value": "10",
+      "description": "Computer ID for testing"
+    },
+    {
+      "key": "monitorId",
+      "value": "15",
+      "description": "Monitor ID for testing"
+    },
+    {
+      "key": "softwareId",
+      "value": "20",
+      "description": "Software ID for testing"
+    },
+    {
+      "key": "categoryId",
+      "value": "1",
+      "description": "Category ID for testing"
+    },
+    {
+      "key": "locationId",
+      "value": "5",
+      "description": "Location ID for testing"
+    },
+    {
+      "key": "itemType",
+      "value": "Ticket",
+      "description": "GLPI item type for generic search"
+    }
+  ]
+}
